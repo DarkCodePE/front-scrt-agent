@@ -69,9 +69,10 @@ export function DocumentAnalysisView({ results, onReset }: DocumentAnalysisViewP
     // Función para formatear valores
     const formatValue = (key: string, value: any): React.ReactNode => {
         if (value === null || value === undefined) return "-";
-
         if (Array.isArray(value)) {
             if (key === "person_by_policy" && value.length > 0) {
+                console.log("key", key)
+                console.log("value", value)
                 return (
                     <Table>
                         <TableHeader>
@@ -82,13 +83,15 @@ export function DocumentAnalysisView({ results, onReset }: DocumentAnalysisViewP
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {(value as PersonValidationDetails[]).map((person, idx) => (
+                            {
+                                (value as PersonValidationDetails[]).map((person, idx) => (
                                 <TableRow key={idx}>
                                     <TableCell className="font-medium">{person.full_name}</TableCell>
                                     <TableCell>{person.document_number}</TableCell>
                                     <TableCell>{person.coverage_start_date || "-"}</TableCell>
                                 </TableRow>
-                            ))}
+                            ))
+                            }
                         </TableBody>
                     </Table>
                 );
@@ -131,18 +134,18 @@ export function DocumentAnalysisView({ results, onReset }: DocumentAnalysisViewP
                 </Card>
 
                 <h3 className="text-lg font-medium mt-6">Secciones del Documento</h3>
-                <div className="space-y-4">
-                    {content.sections.map((section, index) => (
-                        <Card key={index} className="overflow-hidden">
-                            <CardHeader className="py-3">
-                                <CardTitle className="text-base">{section.title || "Sección sin título"}</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="whitespace-pre-wrap text-sm">{section.content}</div>
-                            </CardContent>
-                        </Card>
-                    ))}
-                </div>
+                {/*<div className="space-y-4">*/}
+                {/*    {content.sections.map((section, index) => (*/}
+                {/*        <Card key={index} className="overflow-hidden">*/}
+                {/*            <CardHeader className="py-3">*/}
+                {/*                <CardTitle className="text-base">{section.title || "Sección sin título"}</CardTitle>*/}
+                {/*            </CardHeader>*/}
+                {/*            <CardContent>*/}
+                {/*                <div className="whitespace-pre-wrap text-sm">{section.content}</div>*/}
+                {/*            </CardContent>*/}
+                {/*        </Card>*/}
+                {/*    ))}*/}
+                {/*</div>*/}
             </div>
         );
     };
@@ -160,7 +163,7 @@ export function DocumentAnalysisView({ results, onReset }: DocumentAnalysisViewP
                     Análisis de Pólizas
                 </h3>
 
-                {results.segmented_sections.map((section, index) => (
+                {results.segmented_sections.content.map((section, index) => (
                     <Card key={index} className="overflow-hidden">
                         <CardHeader className="bg-primary/5 border-b">
                             <div className="flex items-center justify-between">
@@ -168,9 +171,9 @@ export function DocumentAnalysisView({ results, onReset }: DocumentAnalysisViewP
                                     <FileText className="w-5 h-5 text-primary" />
                                     Póliza #{index + 1}
                                 </CardTitle>
-                                {section.content.policy_number && (
+                                {section.policy_number && (
                                     <Badge variant="outline" className="font-mono">
-                                        {section.content.policy_number}
+                                        {section.policy_number}
                                     </Badge>
                                 )}
                             </div>
@@ -189,33 +192,33 @@ export function DocumentAnalysisView({ results, onReset }: DocumentAnalysisViewP
                                     <AccordionContent className="px-6 py-3 border-t border-gray-100">
                                         <dl className="divide-y divide-gray-100">
                                             {/* Empresa */}
-                                            {section.content.company && (
+                                            {section.company && (
                                                 <div className="py-3 grid grid-cols-3 gap-4">
                                                     <dt className="font-medium text-gray-900">Empresa</dt>
-                                                    <dd className="text-gray-700 col-span-2">{section.content.company}</dd>
+                                                    <dd className="text-gray-700 col-span-2">{section.company}</dd>
                                                 </div>
                                             )}
 
                                             {/* Aseguradora */}
-                                            {section.content.insurance_company && (
+                                            {section.insurance_company && (
                                                 <div className="py-3 grid grid-cols-3 gap-4">
                                                     <dt className="font-medium text-gray-900">Aseguradora</dt>
-                                                    <dd className="text-gray-700 col-span-2">{section.content.insurance_company}</dd>
+                                                    <dd className="text-gray-700 col-span-2">{section.insurance_company}</dd>
                                                 </div>
                                             )}
 
                                             {/* Fecha de Emisión */}
-                                            {section.content.date_of_issuance && (
+                                            {section.validity && (
                                                 <div className="py-3 grid grid-cols-3 gap-4">
                                                     <dt className="font-medium text-gray-900">Fecha de Emisión</dt>
-                                                    <dd className="text-gray-700 col-span-2">{section.content.date_of_issuance}</dd>
+                                                    <dd className="text-gray-700 col-span-2">{section.validity}</dd>
                                                 </div>
                                             )}
 
                                             {/* Otros campos */}
-                                            {Object.entries(section.content)
+                                            {Object.entries(section)
                                                 .filter(([key]) =>
-                                                    !['company', 'insurance_company', 'date_of_issuance', 'policy_number',
+                                                    !['company', 'insurance_company', 'policy_number',
                                                         'person_by_policy', 'start_date_validity', 'end_date_validity', 'validity'].includes(key))
                                                 .map(([key, value]) => (
                                                     <div key={key} className="py-3 grid grid-cols-3 gap-4">
@@ -239,26 +242,26 @@ export function DocumentAnalysisView({ results, onReset }: DocumentAnalysisViewP
                                     <AccordionContent className="px-6 py-3 border-t border-gray-100">
                                         <dl className="divide-y divide-gray-100">
                                             {/* Vigencia completa */}
-                                            {section.content.validity && (
+                                            {section.validity && (
                                                 <div className="py-3 grid grid-cols-3 gap-4">
                                                     <dt className="font-medium text-gray-900">Vigencia</dt>
-                                                    <dd className="text-gray-700 col-span-2">{section.content.validity}</dd>
+                                                    <dd className="text-gray-700 col-span-2">{section.validity}</dd>
                                                 </div>
                                             )}
 
                                             {/* Fecha de inicio */}
-                                            {section.content.start_date_validity && (
+                                            {section.start_date_validity && (
                                                 <div className="py-3 grid grid-cols-3 gap-4">
                                                     <dt className="font-medium text-gray-900">Fecha de Inicio</dt>
-                                                    <dd className="text-gray-700 col-span-2">{section.content.start_date_validity}</dd>
+                                                    <dd className="text-gray-700 col-span-2">{section.start_date_validity}</dd>
                                                 </div>
                                             )}
 
                                             {/* Fecha de fin */}
-                                            {section.content.end_date_validity && (
+                                            {section.end_date_validity && (
                                                 <div className="py-3 grid grid-cols-3 gap-4">
                                                     <dt className="font-medium text-gray-900">Fecha de Fin</dt>
-                                                    <dd className="text-gray-700 col-span-2">{section.content.end_date_validity}</dd>
+                                                    <dd className="text-gray-700 col-span-2">{section.end_date_validity}</dd>
                                                 </div>
                                             )}
                                         </dl>
@@ -266,7 +269,7 @@ export function DocumentAnalysisView({ results, onReset }: DocumentAnalysisViewP
                                 </AccordionItem>
 
                                 {/* Personas Aseguradas */}
-                                {section.content.person_by_policy && section.content.person_by_policy.length > 0 && (
+                                {section.person_by_policy && section.person_by_policy.length > 0 && (
                                     <AccordionItem value="item-2">
                                         <AccordionTrigger className="px-6 py-3 hover:bg-gray-50">
                       <span className="flex items-center gap-2">
@@ -285,7 +288,7 @@ export function DocumentAnalysisView({ results, onReset }: DocumentAnalysisViewP
                                                         </TableRow>
                                                     </TableHeader>
                                                     <TableBody>
-                                                        {(section.content.person_by_policy as PersonValidationDetails[]).map((person, idx) => (
+                                                        {(section.person_by_policy as PersonValidationDetails[]).map((person, idx) => (
                                                             <TableRow key={idx}>
                                                                 <TableCell className="font-medium">{person.full_name}</TableCell>
                                                                 <TableCell>{person.document_number}</TableCell>

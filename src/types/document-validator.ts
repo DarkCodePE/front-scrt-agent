@@ -20,13 +20,23 @@ export interface PersonValidationDetails {
     full_name: string;
     document_number: string;
     coverage_start_date?: string;
+    type_document?:string;
 }
 
 // Tipo para el contenido estructurado del documento
-export interface DocumentStructuredContent {
-    content: any; // Contiene la información estructurada del documento
+export interface DocumentStructured {
+    start_date_validity?: string;
+    end_date_validity?: string;
+    validity?: string;
+    policy_number?: string;
+    company?: string;
+    insurance_company?: string;
+    person_by_policy?: PersonValidationDetails[];
+    signatories?: string[];
 }
-
+export interface DocumentStructuredContent {
+    content: DocumentStructured; // Contiene la información estructurada del documento
+}
 // Tipo principal para el estado de validación
 export interface DocumentValidationDetails {
     start_date_validity?: string;
