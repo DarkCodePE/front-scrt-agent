@@ -152,7 +152,7 @@ export function DocumentAnalysisView({ results, onReset }: DocumentAnalysisViewP
 
     // Renderizar pólizas y secciones segmentadas
     const renderSegmentedSections = () => {
-        if (!results.segmented_sections || results.segmented_sections.length === 0) {
+        if (!results.segmented_sections) {
             return <div className="p-8 text-center text-gray-500">No hay secciones segmentadas disponibles</div>;
         }
 
