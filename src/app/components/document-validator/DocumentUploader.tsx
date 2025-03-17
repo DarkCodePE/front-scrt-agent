@@ -112,10 +112,7 @@ export default function DocumentUploader({
             clearInterval(progressInterval);
             setUploadProgress(100);
 
-            toast({
-                title: "Procesamiento completado",
-                description: "Documento analizado correctamente"
-            });
+            toast("Procesamiento completado");
 
             // Pequeño delay para mostrar el 100% de progreso antes de mostrar resultados
             setTimeout(() => {
@@ -127,11 +124,7 @@ export default function DocumentUploader({
             setError(errorMessage);
             setUploadProgress(0);
 
-            toast({
-                variant: "destructive",
-                title: "Error en el procesamiento",
-                description: errorMessage
-            });
+            toast("Error en el procesamiento");
         } finally {
             setIsUploading(false);
         }
