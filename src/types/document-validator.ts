@@ -35,7 +35,7 @@ export interface DocumentStructured {
     signatories?: string[];
 }
 export interface DocumentStructuredContent {
-    content: DocumentStructured; // Contiene la información estructurada del documento
+    content: DocumentStructured[]; // Contiene la información estructurada del documento
 }
 // Tipo principal para el estado de validación
 export interface DocumentValidationDetails {
@@ -60,5 +60,5 @@ export interface ValidationResults {
     extracted_text: string;
     component: StructuredContent;
     person_name: string;
-    segmented_sections: DocumentStructuredContent[];
+    segmented_sections: DocumentStructuredContent;
 }

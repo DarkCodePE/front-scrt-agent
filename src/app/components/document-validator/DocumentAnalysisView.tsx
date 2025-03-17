@@ -163,7 +163,8 @@ export function DocumentAnalysisView({ results, onReset }: DocumentAnalysisViewP
                     Análisis de Pólizas
                 </h3>
 
-                {results.segmented_sections.content.map((section, index) => (
+                {
+                    results.segmented_sections.content.map((section, index) => (
                     <Card key={index} className="overflow-hidden">
                         <CardHeader className="bg-primary/5 border-b">
                             <div className="flex items-center justify-between">
